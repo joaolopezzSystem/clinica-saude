@@ -1,0 +1,46 @@
+/* Fundo geral */
+body {
+  font-family: Arial, sans-serif;
+}
+
+/* Título principal */
+h1 {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+/* Cards */
+.card {
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Espaçamento interno */
+.card h3 {
+  font-weight: 600;
+}
+
+/* Inputs e selects */
+input, select {
+  border-radius: 8px !important;
+}
+
+/* Botões */
+button {
+  border-radius: 8px !important;
+  font-weight: bold;
+}
+
+/* Lista de resultados */
+#resultado li {
+  background: #f8f9fa;
+  padding: 10px;
+  margin-bottom: 5px;
+  border-radius: 6px;
+  list-style: none;
+}
+
+/* Hover nos botões */
+button:hover {
+  opacity: 0.9;
+}
