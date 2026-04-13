@@ -1,7 +1,7 @@
 ## Como executar o projeto
 
 1. Baixar ou clonar o repositório:
-   git clone https://github.com/SEU-USUARIO/clinica-saude.git
+   git clone https://github.com/joaolopezzSystem/clinica-saude.git
 
 2. Acessar a pasta backend:
    cd clinica-saude/backend
