@@ -183,47 +183,40 @@ function agendar() {
 function consultar() {
   const cpf = document.getElementById('cpfConsulta').value;
   const lista = document.getElementById('resultado');
-
-  if (!lista) {
-    console.error("Elemento #resultado não encontrado");
-    return;
-  }
-
   lista.innerHTML = '';
 
-  // 👉 Se estiver no GitHub Pages
+  // 👉 Se estiver no GitHub Pages (sem backend)
   if (!API_URL) {
-    console.warn("Sem backend - usando dados fake");
-
-    const dadosFake = [
-      {
-        nome: "João Teste",
-        cpf: cpf,
-        profissional: "Dr. João Silva",
-        data: "2026-04-20",
-        hora: "10:00"
-      }
-    ];
-
-    renderResultado(dadosFake);
+    const li = document.createElement('li');
+    li.textContent = "Consulta disponível apenas no ambiente local (backend).";
+    lista.appendChild(li);
     return;
   }
 
-  // 👉 Ambiente local
+  // 👉 Ambiente local (funcionamento real)
   fetch(`${API_URL}/agendamentos/${cpf}`)
     .then(res => {
       if (!res.ok) throw new Error("Erro na API");
       return res.json();
     })
     .then(data => {
-      renderResultado(data);
+      if (!data || data.length === 0) {
+        const li = document.createElement('li');
+        li.textContent = "Nenhum agendamento encontrado.";
+        lista.appendChild(li);
+        return;
+      }
+
+      data.forEach(a => {
+        const li = document.createElement('li');
+        li.textContent = `${a.nome} - ${a.profissional} - ${a.data} às ${a.hora}`;
+        lista.appendChild(li);
+      });
     })
-    .catch(err => {
-      console.error(err);
+    .catch(() => {
       alert("Erro ao consultar agendamento.");
     });
 }
-
 
 // ========================
 // FUNÇÃO DE RENDERIZAÇÃO
