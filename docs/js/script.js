@@ -183,11 +183,17 @@ function agendar() {
 function consultar() {
   const cpf = document.getElementById('cpfConsulta').value;
   const lista = document.getElementById('resultado');
+
+  if (!lista) {
+    console.error("Elemento #resultado não encontrado");
+    return;
+  }
+
   lista.innerHTML = '';
 
-  // 👉 Se estiver no GitHub Pages, não tenta API
+  // 👉 Se estiver no GitHub Pages
   if (!API_URL) {
-    console.warn("Ambiente online sem backend, usando dados simulados");
+    console.warn("Sem backend - usando dados fake");
 
     const dadosFake = [
       {
@@ -199,30 +205,32 @@ function consultar() {
       }
     ];
 
-    mostrarResultado(dadosFake);
+    renderResultado(dadosFake);
     return;
   }
 
-  // 👉 Se estiver local, usa API
+  // 👉 Ambiente local
   fetch(`${API_URL}/agendamentos/${cpf}`)
     .then(res => {
       if (!res.ok) throw new Error("Erro na API");
       return res.json();
     })
     .then(data => {
-      mostrarResultado(data);
+      renderResultado(data);
     })
-    .catch(() => {
+    .catch(err => {
+      console.error(err);
       alert("Erro ao consultar agendamento.");
     });
 }
 
 
 // ========================
-// FUNÇÃO AUXILIAR
+// FUNÇÃO DE RENDERIZAÇÃO
 // ========================
-function mostrarResultado(data) {
+function renderResultado(data) {
   const lista = document.getElementById('resultado');
+
   lista.innerHTML = '';
 
   if (!data || data.length === 0) {
