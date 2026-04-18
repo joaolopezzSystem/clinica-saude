@@ -1,8 +1,22 @@
-// função global (IMPORTANTE)
+// ========================
+// CONFIG API (LOCAL vs ONLINE)
+// ========================
+const API_URL = window.location.hostname === "localhost"
+  ? "http://localhost:3000"
+  : ""; // pode deixar vazio no GitHub Pages
+
+
+// ========================
+// FUNÇÃO GLOBAL
+// ========================
 function apenasNumeros(input) {
   input.value = input.value.replace(/\D/g, '');
 }
 
+
+// ========================
+// CARREGAMENTO INICIAL
+// ========================
 document.addEventListener("DOMContentLoaded", function () {
 
   let profissionais = [];
@@ -15,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // ========================
   // CARREGAR PROFISSIONAIS
   // ========================
-  fetch('http://localhost:3000/profissionais')
+  fetch(`${API_URL}/profissionais`)
     .then(res => res.json())
     .then(data => {
       profissionais = data;
@@ -32,6 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     })
     .catch(err => console.error("Erro ao carregar profissionais:", err));
+
 
   // ========================
   // FILTRAR PROFISSIONAIS
@@ -53,8 +68,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
+
   // ========================
-  // DATAS
+  // DATAS (PRÓXIMOS 7 DIAS)
   // ========================
   function carregarDatas() {
     selectData.innerHTML = '<option value="">Selecione data</option>';
@@ -75,8 +91,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   carregarDatas();
 
+
   // ========================
-  // HORÁRIOS
+  // HORÁRIOS (08h às 18h)
   // ========================
   function carregarHorarios() {
     selectHora.innerHTML = '<option value="">Selecione horário</option>';
@@ -94,14 +111,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
   carregarHorarios();
 
-}); // 👈 FECHAMENTO CORRETO
+}); // fechamento correto
 
 
 // ========================
 // AGENDAR
 // ========================
 function agendar() {
-  fetch('http://localhost:3000/agendar', {
+  fetch(`${API_URL}/agendar`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -118,6 +135,9 @@ function agendar() {
     alert("Agendamento realizado com sucesso!");
     document.getElementById('nome').value = '';
     document.getElementById('cpf').value = '';
+  })
+  .catch(() => {
+    alert("Erro ao agendar.");
   });
 }
 
@@ -128,7 +148,7 @@ function agendar() {
 function consultar() {
   const cpf = document.getElementById('cpfConsulta').value;
 
-  fetch(`http://localhost:3000/agendamentos/${cpf}`)
+  fetch(`${API_URL}/agendamentos/${cpf}`)
     .then(res => res.json())
     .then(data => {
       const lista = document.getElementById('resultado');
@@ -148,7 +168,7 @@ function consultar() {
       });
     })
     .catch(() => {
-      alert("Erro ao consultar agendamento.");
+      alert("Erro ao consultar.");
     });
 }
 
@@ -159,8 +179,9 @@ function consultar() {
 function cancelar() {
   const cpf = document.getElementById('cpfCancelar').value;
 
-  fetch(`http://localhost:3000/agendamentos/${cpf}`, {
+  fetch(`${API_URL}/agendamentos/${cpf}`, {
     method: 'DELETE'
   })
-  .then(() => alert("Cancelado com sucesso!"));
+  .then(() => alert("Cancelado com sucesso!"))
+  .catch(() => alert("Erro ao cancelar."));
 }
