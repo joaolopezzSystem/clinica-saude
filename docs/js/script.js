@@ -182,31 +182,62 @@ function agendar() {
 // ========================
 function consultar() {
   const cpf = document.getElementById('cpfConsulta').value;
+  const lista = document.getElementById('resultado');
+  lista.innerHTML = '';
 
-  fetch(`${API_URL}/agendamentos/${cpf}`)
-    .then(res => res.json())
-    .then(data => {
-      const lista = document.getElementById('resultado');
-      lista.innerHTML = '';
+  // 👉 Se estiver no GitHub Pages, não tenta API
+  if (!API_URL) {
+    console.warn("Ambiente online sem backend, usando dados simulados");
 
-      if (data.length === 0) {
-        const li = document.createElement('li');
-        li.textContent = "Nenhum agendamento encontrado.";
-        lista.appendChild(li);
-        return;
+    const dadosFake = [
+      {
+        nome: "João Teste",
+        cpf: cpf,
+        profissional: "Dr. João Silva",
+        data: "2026-04-20",
+        hora: "10:00"
       }
+    ];
 
-      data.forEach(a => {
-        const li = document.createElement('li');
-        li.textContent = `${a.nome} - ${a.profissional} - ${a.data} às ${a.hora}`;
-        lista.appendChild(li);
-      });
+    mostrarResultado(dadosFake);
+    return;
+  }
+
+  // 👉 Se estiver local, usa API
+  fetch(`${API_URL}/agendamentos/${cpf}`)
+    .then(res => {
+      if (!res.ok) throw new Error("Erro na API");
+      return res.json();
+    })
+    .then(data => {
+      mostrarResultado(data);
     })
     .catch(() => {
-      alert("Erro ao consultar.");
+      alert("Erro ao consultar agendamento.");
     });
 }
 
+
+// ========================
+// FUNÇÃO AUXILIAR
+// ========================
+function mostrarResultado(data) {
+  const lista = document.getElementById('resultado');
+  lista.innerHTML = '';
+
+  if (!data || data.length === 0) {
+    const li = document.createElement('li');
+    li.textContent = "Nenhum agendamento encontrado.";
+    lista.appendChild(li);
+    return;
+  }
+
+  data.forEach(a => {
+    const li = document.createElement('li');
+    li.textContent = `${a.nome} - ${a.profissional} - ${a.data} às ${a.hora}`;
+    lista.appendChild(li);
+  });
+}
 
 // ========================
 // CANCELAR
