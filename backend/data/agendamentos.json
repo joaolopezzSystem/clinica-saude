@@ -15,5 +15,12 @@
     "cpf": "080500",
     "profissional": "Dra. Maria Souza",
     "data": "2026-04-14"
+  },
+  {
+    "nome": "João Guilherme Lopes de Andrade",
+    "cpf": "08000",
+    "profissional": "Dr. João Silva",
+    "data": "2026-04-24",
+    "hora": "15:00"
   }
 ]
