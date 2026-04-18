@@ -1,4 +1,3 @@
-alert("SCRIPT NOVO CARREGADO");
 
 // ========================
 // CONFIG API (LOCAL vs ONLINE)
