@@ -42,27 +42,30 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ========================
-  // CARREGAR PROFISSIONAIS (API OU FALLBACK)
-  // ========================
-  fetch(`${API_URL}/profissionais`)
-    .then(res => res.json())
-    .then(data => {
-      profissionais = data;
-      carregarEspecialidades();
-    })
-    .catch(() => {
-      console.warn("API não disponível, usando dados locais");
+  let profissionais = [
+  { nome: "Dr. João Silva", especialidade: "Cardiologia" },
+  { nome: "Dra. Maria Souza", especialidade: "Dermatologia" },
+  { nome: "Dr. Pedro Lima", especialidade: "Ortopedia" }
+];
 
-      profissionais = [
-        { nome: "Dr. João Silva", especialidade: "Cardiologia" },
-        { nome: "Dra. Maria Souza", especialidade: "Dermatologia" },
-        { nome: "Dr. Pedro Lima", especialidade: "Ortopedia" }
-      ];
+function carregarEspecialidades() {
+  const selectEsp = document.getElementById('especialidade');
 
-      carregarEspecialidades();
-    });
+  const especialidades = [...new Set(profissionais.map(p => p.especialidade))];
 
+  selectEsp.innerHTML = '<option value="">Selecione especialidade</option>';
+
+  especialidades.forEach(esp => {
+    const option = document.createElement('option');
+    option.value = esp;
+    option.text = esp;
+    selectEsp.appendChild(option);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  carregarEspecialidades();
+});
 
   // ========================
   // FILTRAR PROFISSIONAIS
