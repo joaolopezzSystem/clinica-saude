@@ -3,10 +3,10 @@
 // CONFIG API (LOCAL vs ONLINE)
 // ========================
 const API_URL =
-  window.location.hostname === "localhost" ||
-  window.location.hostname === "127.0.0.1"
+  window.location.hostname.includes("localhost") ||
+  window.location.hostname.includes("127.0.0.1")
     ? "http://localhost:3000"
-    : "";
+    : "https://clinica-saude-api.onrender.com";
 
 
 // ========================
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
 // ========================
-// CARREGAR PROFISSIONAIS (API + FALLBACK)
+// CARREGAR PROFISSIONAIS
 // ========================
 fetch(`${API_URL}/profissionais`)
   .then(res => {
