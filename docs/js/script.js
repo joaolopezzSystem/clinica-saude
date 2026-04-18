@@ -3,7 +3,7 @@
 // ========================
 const API_URL = window.location.hostname === "localhost"
   ? "http://localhost:3000"
-  : ""; // pode deixar vazio no GitHub Pages
+  : "";
 
 
 // ========================
@@ -27,25 +27,41 @@ document.addEventListener("DOMContentLoaded", function () {
   const selectHora = document.getElementById('hora');
 
   // ========================
-  // CARREGAR PROFISSIONAIS
+  // FUNÇÃO PARA CARREGAR ESPECIALIDADES
+  // ========================
+  function carregarEspecialidades() {
+    const especialidades = [...new Set(profissionais.map(p => p.especialidade))];
+
+    selectEsp.innerHTML = '<option value="">Selecione especialidade</option>';
+
+    especialidades.forEach(esp => {
+      const option = document.createElement('option');
+      option.value = esp;
+      option.text = esp;
+      selectEsp.appendChild(option);
+    });
+  }
+
+  // ========================
+  // CARREGAR PROFISSIONAIS (API OU FALLBACK)
   // ========================
   fetch(`${API_URL}/profissionais`)
     .then(res => res.json())
     .then(data => {
       profissionais = data;
-
-      const especialidades = [...new Set(data.map(p => p.especialidade))];
-
-      selectEsp.innerHTML = '<option value="">Selecione especialidade</option>';
-
-      especialidades.forEach(esp => {
-        const option = document.createElement('option');
-        option.value = esp;
-        option.text = esp;
-        selectEsp.appendChild(option);
-      });
+      carregarEspecialidades();
     })
-    .catch(err => console.error("Erro ao carregar profissionais:", err));
+    .catch(() => {
+      console.warn("API não disponível, usando dados locais");
+
+      profissionais = [
+        { nome: "Dr. João Silva", especialidade: "Cardiologia" },
+        { nome: "Dra. Maria Souza", especialidade: "Dermatologia" },
+        { nome: "Dr. Pedro Lima", especialidade: "Ortopedia" }
+      ];
+
+      carregarEspecialidades();
+    });
 
 
   // ========================
