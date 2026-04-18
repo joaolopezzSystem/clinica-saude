@@ -10,8 +10,11 @@ document.addEventListener("DOMContentLoaded", function () {
   const selectEsp = document.getElementById('especialidade');
   const selectProf = document.getElementById('profissional');
   const selectData = document.getElementById('data');
+  const selectHora = document.getElementById('hora');
 
-  // carregar profissionais
+  // ========================
+  // CARREGAR PROFISSIONAIS
+  // ========================
   fetch('http://localhost:3000/profissionais')
     .then(res => res.json())
     .then(data => {
@@ -30,14 +33,17 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     .catch(err => console.error("Erro ao carregar profissionais:", err));
 
-
-  // filtrar profissionais
+  // ========================
+  // FILTRAR PROFISSIONAIS
+  // ========================
   selectEsp.addEventListener('change', function () {
     const esp = this.value;
 
     selectProf.innerHTML = '<option value="">Selecione profissional</option>';
 
-    const filtrados = profissionais.filter(p => p.especialidade === esp);
+    const filtrados = profissionais.filter(p =>
+      p.especialidade.toLowerCase() === esp.toLowerCase()
+    );
 
     filtrados.forEach(p => {
       const option = document.createElement('option');
@@ -47,8 +53,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-
-  // carregar datas
+  // ========================
+  // DATAS
+  // ========================
   function carregarDatas() {
     selectData.innerHTML = '<option value="">Selecione data</option>';
 
@@ -68,10 +75,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
   carregarDatas();
 
-});
+  // ========================
+  // HORÁRIOS
+  // ========================
+  function carregarHorarios() {
+    selectHora.innerHTML = '<option value="">Selecione horário</option>';
+
+    for (let h = 8; h < 18; h++) {
+      const hora = `${h.toString().padStart(2, '0')}:00`;
+
+      const option = document.createElement('option');
+      option.value = hora;
+      option.text = hora;
+
+      selectHora.appendChild(option);
+    }
+  }
+
+  carregarHorarios();
+
+}); // 👈 FECHAMENTO CORRETO
 
 
+// ========================
 // AGENDAR
+// ========================
 function agendar() {
   fetch('http://localhost:3000/agendar', {
     method: 'POST',
@@ -82,18 +110,21 @@ function agendar() {
       nome: document.getElementById('nome').value,
       cpf: document.getElementById('cpf').value,
       profissional: document.getElementById('profissional').value,
-      data: document.getElementById('data').value
+      data: document.getElementById('data').value,
+      hora: document.getElementById('hora').value
     })
   })
   .then(() => {
     alert("Agendamento realizado com sucesso!");
     document.getElementById('nome').value = '';
     document.getElementById('cpf').value = '';
-    });
+  });
 }
 
 
+// ========================
 // CONSULTAR
+// ========================
 function consultar() {
   const cpf = document.getElementById('cpfConsulta').value;
 
@@ -103,7 +134,6 @@ function consultar() {
       const lista = document.getElementById('resultado');
       lista.innerHTML = '';
 
-      // 👉 Se não encontrar nada
       if (data.length === 0) {
         const li = document.createElement('li');
         li.textContent = "Nenhum agendamento encontrado.";
@@ -111,10 +141,9 @@ function consultar() {
         return;
       }
 
-      // 👉 Se encontrar agendamentos
       data.forEach(a => {
         const li = document.createElement('li');
-        li.textContent = `${a.nome} - ${a.profissional} - ${a.data}`;
+        li.textContent = `${a.nome} - ${a.profissional} - ${a.data} às ${a.hora}`;
         lista.appendChild(li);
       });
     })
@@ -124,7 +153,9 @@ function consultar() {
 }
 
 
+// ========================
 // CANCELAR
+// ========================
 function cancelar() {
   const cpf = document.getElementById('cpfCancelar').value;
 

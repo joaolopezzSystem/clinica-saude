@@ -1,16 +1,33 @@
 ## Como executar o projeto
 
-1. Baixar ou clonar o repositório:
-   git clone https://github.com/joaolopezzSystem/clinica-saude.git
+Baixar ou clonar o repositório:
+git clone https://github.com/joaolopezzSystem/clinica-saude.git
 
-2. Acessar a pasta backend:
-   cd clinica-saude/backend
+# 🏥 Sistema de Clínica de Saúde
 
-3. Instalar dependências:
-   npm install
+Projeto desenvolvido para a disciplina de Programação e Desenvolvimento Web.
 
-4. Iniciar o servidor:
-   node server.js
+## 🚀 Funcionalidades
 
-5. Abrir o frontend:
-   acessar o arquivo frontend/agendamento.html no navegador
+- Listagem de especialidades
+- Seleção de profissionais
+- Agendamento de consultas
+- Escolha de datas e horários
+- Consulta de agendamentos por CPF
+- Cancelamento de consultas
+
+## 🛠️ Tecnologias utilizadas
+
+- HTML
+- CSS
+- JavaScript
+- Node.js
+- Express
+
+## ▶️ Como executar o projeto
+
+### Backend
+```bash
+cd backend
+npm install
+node server.js
