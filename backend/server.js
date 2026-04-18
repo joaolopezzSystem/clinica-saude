@@ -56,9 +56,18 @@ app.get('/profissionais/busca/:nome', (req, res) => {
 // 📌 AGENDAR CONSULTA
 // =========================
 app.post('/agendar', (req, res) => {
-  const novoAgendamento = req.body;
 
   const agendamentos = JSON.parse(fs.readFileSync(caminhoAgendamentos));
+
+  // 👉 cria agendamento com ID único
+  const novoAgendamento = {
+    id: Date.now(), // ID único baseado no tempo
+    nome: req.body.nome,
+    cpf: req.body.cpf,
+    profissional: req.body.profissional,
+    data: req.body.data,
+    hora: req.body.hora
+  };
 
   agendamentos.push(novoAgendamento);
 
@@ -85,16 +94,16 @@ app.get('/agendamentos/:cpf', (req, res) => {
 // =========================
 // 📌 CANCELAR AGENDAMENTO
 // =========================
-app.delete('/agendamentos/:cpf', (req, res) => {
-  const { cpf } = req.params;
+app.delete('/agendamentos/:id', (req, res) => {
+  const { id } = req.params;
 
   let agendamentos = JSON.parse(fs.readFileSync(caminhoAgendamentos));
 
-  const novos = agendamentos.filter(a => a.cpf !== cpf);
+  const novos = agendamentos.filter(a => a.id != id);
 
   fs.writeFileSync(caminhoAgendamentos, JSON.stringify(novos, null, 2));
 
-  res.json({ mensagem: "Agendamento(s) cancelado(s) com sucesso!" });
+  res.json({ mensagem: "Agendamento cancelado com sucesso!" });
 });
 
 

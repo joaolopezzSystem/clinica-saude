@@ -1,4 +1,3 @@
-
 // ========================
 // CONFIG API (LOCAL vs ONLINE)
 // ========================
@@ -30,7 +29,26 @@ document.addEventListener("DOMContentLoaded", function () {
   const selectHora = document.getElementById('hora');
 
   // ========================
-  // FUNÇÃO PARA CARREGAR ESPECIALIDADES
+  // CARREGAR PROFISSIONAIS
+  // ========================
+  fetch(`${API_URL}/profissionais`)
+    .then(res => res.json())
+    .then(data => {
+      profissionais = data;
+      carregarEspecialidades();
+    })
+    .catch(() => {
+      // fallback
+      profissionais = [
+        { nome: "Dr. João Silva", especialidade: "Cardiologia" },
+        { nome: "Dra. Maria Souza", especialidade: "Dermatologia" },
+        { nome: "Dr. Pedro Lima", especialidade: "Ortopedia" }
+      ];
+      carregarEspecialidades();
+    });
+
+  // ========================
+  // ESPECIALIDADES
   // ========================
   function carregarEspecialidades() {
     const especialidades = [...new Set(profissionais.map(p => p.especialidade))];
@@ -44,47 +62,6 @@ document.addEventListener("DOMContentLoaded", function () {
       selectEsp.appendChild(option);
     });
   }
-
-// ========================
-// CARREGAR PROFISSIONAIS
-// ========================
-fetch(`${API_URL}/profissionais`)
-  .then(res => {
-    if (!res.ok) throw new Error("API não respondeu");
-    return res.json();
-  })
-  .then(data => {
-    profissionais = data;
-    carregarEspecialidades();
-  })
-  .catch(() => {
-    console.warn("Usando dados locais (fallback)");
-
-    profissionais = [
-      { nome: "Dr. João Silva", especialidade: "Cardiologia" },
-      { nome: "Dra. Maria Souza", especialidade: "Dermatologia" },
-      { nome: "Dr. Pedro Lima", especialidade: "Ortopedia" }
-    ];
-
-    carregarEspecialidades();
-  });
-
-
-// ========================
-// FUNÇÃO AUXILIAR
-// ========================
-function carregarEspecialidades() {
-  const especialidades = [...new Set(profissionais.map(p => p.especialidade))];
-
-  selectEsp.innerHTML = '<option value="">Selecione especialidade</option>';
-
-  especialidades.forEach(esp => {
-    const option = document.createElement('option');
-    option.value = esp;
-    option.text = esp;
-    selectEsp.appendChild(option);
-  });
-}
 
   // ========================
   // FILTRAR PROFISSIONAIS
@@ -106,9 +83,8 @@ function carregarEspecialidades() {
     });
   });
 
-
   // ========================
-  // DATAS (PRÓXIMOS 7 DIAS)
+  // DATAS
   // ========================
   function carregarDatas() {
     selectData.innerHTML = '<option value="">Selecione data</option>';
@@ -129,9 +105,8 @@ function carregarEspecialidades() {
 
   carregarDatas();
 
-
   // ========================
-  // HORÁRIOS (08h às 18h)
+  // HORÁRIOS
   // ========================
   function carregarHorarios() {
     selectHora.innerHTML = '<option value="">Selecione horário</option>';
@@ -149,7 +124,7 @@ function carregarEspecialidades() {
 
   carregarHorarios();
 
-}); // fechamento correto
+});
 
 
 // ========================
@@ -171,8 +146,6 @@ function agendar() {
   })
   .then(() => {
     alert("Agendamento realizado com sucesso!");
-    document.getElementById('nome').value = '';
-    document.getElementById('cpf').value = '';
   })
   .catch(() => {
     alert("Erro ao agendar.");
@@ -181,77 +154,54 @@ function agendar() {
 
 
 // ========================
-// CONSULTAR
+// CONSULTAR (AGORA COM ID)
 // ========================
 function consultar() {
   const cpf = document.getElementById('cpfConsulta').value;
   const lista = document.getElementById('resultado');
   lista.innerHTML = '';
 
-  // 👉 Se estiver no GitHub Pages (sem backend)
-  if (!API_URL) {
-    const li = document.createElement('li');
-    li.textContent = "Consulta disponível apenas no ambiente local (backend).";
-    lista.appendChild(li);
-    return;
-  }
-
-  // 👉 Ambiente local (funcionamento real)
   fetch(`${API_URL}/agendamentos/${cpf}`)
-    .then(res => {
-      if (!res.ok) throw new Error("Erro na API");
-      return res.json();
-    })
+    .then(res => res.json())
     .then(data => {
       if (!data || data.length === 0) {
-        const li = document.createElement('li');
-        li.textContent = "Nenhum agendamento encontrado.";
-        lista.appendChild(li);
+        lista.innerHTML = "<li>Nenhum agendamento encontrado.</li>";
         return;
       }
 
       data.forEach(a => {
         const li = document.createElement('li');
-        li.textContent = `${a.nome} - ${a.profissional} - ${a.data} às ${a.hora}`;
+
+        li.innerHTML = `
+          ${a.nome} - ${a.profissional} - ${a.data} às ${a.hora}
+          <br>
+          <strong>ID:</strong> ${a.id}
+          <br>
+          <button onclick="cancelar(${a.id})" class="btn btn-sm btn-danger mt-1">
+            Cancelar
+          </button>
+          <hr>
+        `;
+
         lista.appendChild(li);
       });
     })
     .catch(() => {
-      alert("Erro ao consultar agendamento.");
+      alert("Erro ao consultar.");
     });
 }
 
-// ========================
-// FUNÇÃO DE RENDERIZAÇÃO
-// ========================
-function renderResultado(data) {
-  const lista = document.getElementById('resultado');
-
-  lista.innerHTML = '';
-
-  if (!data || data.length === 0) {
-    const li = document.createElement('li');
-    li.textContent = "Nenhum agendamento encontrado.";
-    lista.appendChild(li);
-    return;
-  }
-
-  data.forEach(a => {
-    const li = document.createElement('li');
-    li.textContent = `${a.nome} - ${a.profissional} - ${a.data} às ${a.hora}`;
-    lista.appendChild(li);
-  });
-}
 
 // ========================
-// CANCELAR
+// CANCELAR POR ID
 // ========================
-function cancelar() {
-  const cpf = document.getElementById('cpfCancelar').value;
-
-  fetch(`${API_URL}/agendamentos/${cpf}`, {
+function cancelar(id) {
+  fetch(`${API_URL}/agendamentos/${id}`, {
     method: 'DELETE'
   })
-  .then(() => alert("Cancelado com sucesso!"))
+  .then(() => {
+    alert("Agendamento cancelado!");
+    consultar(); // atualiza lista
+  })
   .catch(() => alert("Erro ao cancelar."));
 }
