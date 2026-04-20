@@ -200,8 +200,8 @@ function cancelar(id) {
     method: 'DELETE'
   })
   .then(() => {
-    alert("Agendamento cancelado!");
-    consultar(); // atualiza lista
+    alert("Cancelado com sucesso!");
+    consultar(); // 🔥 atualiza lista na hora
   })
   .catch(() => alert("Erro ao cancelar."));
 }
