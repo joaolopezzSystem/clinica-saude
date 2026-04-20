@@ -1,33 +1,56 @@
-## Como executar o projeto
-
-Baixar ou clonar o repositório:
-git clone https://github.com/joaolopezzSystem/clinica-saude.git
-
 # 🏥 Sistema de Clínica de Saúde
 
 Projeto desenvolvido para a disciplina de Programação e Desenvolvimento Web.
 
+Sistema completo para gerenciamento de agendamentos de consultas médicas, com frontend integrado a uma API backend.
+
+---
+
 ## 🚀 Funcionalidades
 
-- Listagem de especialidades
-- Seleção de profissionais
+- Listagem dinâmica de especialidades médicas
+- Seleção de profissionais por especialidade
 - Agendamento de consultas
-- Escolha de datas e horários
+- Escolha de datas (próximos 7 dias)
+- Seleção de horários (08h às 18h)
 - Consulta de agendamentos por CPF
-- Cancelamento de consultas
+- Cancelamento de consultas por ID
+- Validação de campos obrigatórios
+- Integração com API (local e online)
+
+---
 
 ## 🛠️ Tecnologias utilizadas
 
-- HTML
-- CSS
+### Frontend
+- HTML5
+- CSS3
 - JavaScript
-- Node.js
-- Express
-
-## ▶️ Como executar o projeto
+- Bootstrap
 
 ### Backend
-```bash
-cd backend
-npm install
-node server.js
+- Node.js
+- Express
+- File System (fs)
+
+### Deploy
+- GitHub Pages (Frontend)
+- Render (Backend)
+
+---
+
+## 🌐 Acesso ao sistema
+
+👉 Frontend (GitHub Pages):  
+https://joaolopezzSystem.github.io/clinica-saude/
+
+👉 Backend (Render API):  
+https://clinica-saude-api.onrender.com/profissionais
+
+---
+
+## ▶️ Como executar o projeto localmente
+
+### 1. Clonar repositório
+
+git clone https://github.com/joaolopezzSystem/clinica-saude.git
