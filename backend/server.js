@@ -129,7 +129,7 @@ app.delete('/agendamentos/:id', (req, res) => {
 
   let agendamentos = lerJSON(caminhoAgendamentos);
 
-  const novos = agendamentos.filter(a => a.id != id);
+  const novos = agendamentos.filter(a => String(a.id) !== String(id));
 
   salvarJSON(caminhoAgendamentos, novos);
 
