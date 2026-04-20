@@ -22,13 +22,24 @@
     <input class="form-control mb-2" id="cpf" required placeholder="Digite seu CPF" oninput="apenasNumeros(this)">
 
     
-    <select class="form-control mb-2" id="especialidade"></select>
-    <select class="form-control mb-2" id="profissional"></select>
-    <select class="form-control mb-2" id="data"></select>
-    <select class="form-control mb-2" id="hora"></select>
+   <select class="form-control mb-2" id="especialidade">
+  <option value="">Selecione especialidade</option>
+</select>
+
+<select class="form-control mb-2" id="profissional">
+  <option value="">Selecione profissional</option>
+</select>
+
+<select class="form-control mb-2" id="data">
+  <option value="">Selecione data</option>
+</select>
+
+<select class="form-control mb-2" id="hora">
+  <option value="">Selecione horário</option>
+</select>
 
 
-    <button class="btn btn-primary" onclick="agendar()">Agendar</button>
+    <button type="button" class="btn btn-primary" onclick="agendar()">Agendar</button>
   </div>
 
   <div class="card p-4 mb-4">
@@ -37,7 +48,7 @@
     <input class="form-control mb-2" id="cpfConsulta" placeholder="CPF" oninput="apenasNumeros(this)">
     <button class="btn btn-success" onclick="consultar()">Consultar</button>
 
-    <ul class="mt-3" id="resultado"></ul>
+    <ul class="mt-3 list-group" id="resultado"></ul>
   </div>
 
   
