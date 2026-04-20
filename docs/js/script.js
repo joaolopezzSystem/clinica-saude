@@ -221,6 +221,8 @@ function consultar() {
 // CANCELAR POR ID
 // ========================
 function cancelar(id) {
+  if (!confirm("Deseja realmente cancelar este agendamento?")) return;
+  
   fetch(`${API_URL}/agendamentos/${id}`, {
     method: 'DELETE'
   })
