@@ -131,21 +131,46 @@ document.addEventListener("DOMContentLoaded", function () {
 // AGENDAR
 // ========================
 function agendar() {
+  const nome = document.getElementById('nome').value;
+  const cpf = document.getElementById('cpf').value;
+  const profissional = document.getElementById('profissional').value;
+  const data = document.getElementById('data').value;
+  const hora = document.getElementById('hora').value;
+
+  // ✅ VALIDAÇÃO
+  if (!nome || !cpf || !profissional || !data || !hora) {
+    alert("Preencha todos os campos!");
+    return;
+  }
+
   fetch(`${API_URL}/agendar`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      nome: document.getElementById('nome').value,
-      cpf: document.getElementById('cpf').value,
-      profissional: document.getElementById('profissional').value,
-      data: document.getElementById('data').value,
-      hora: document.getElementById('hora').value
+      nome,
+      cpf,
+      profissional,
+      data,
+      hora
     })
   })
-  .then(() => {
-    alert("Agendamento realizado com sucesso!");
+  .then(res => {
+    if (!res.ok) {
+      throw new Error("Erro ao agendar");
+    }
+    return res.json();
+  })
+  .then(data => {
+    alert(data.mensagem || "Agendamento realizado com sucesso!");
+
+    // ✅ LIMPAR CAMPOS
+    document.getElementById('nome').value = '';
+    document.getElementById('cpf').value = '';
+    document.getElementById('profissional').value = '';
+    document.getElementById('data').value = '';
+    document.getElementById('hora').value = '';
   })
   .catch(() => {
     alert("Erro ao agendar.");
